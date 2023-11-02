@@ -41,3 +41,7 @@
     background-color: rgb(89, 171, 252);
 
 }
+.loginFormErrorClass{
+    font-size: 12px;
+    color: red;
+}

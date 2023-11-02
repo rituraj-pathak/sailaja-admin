@@ -25,40 +25,37 @@ registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview,Fi
 const NewProject = () => {
   // const [isEdited,setIsEdited]= useState(false)
   const { state } = useLocation();
-  const [formData, setFormData] = useState({ projectName: "", projectImage: null, architectureMap: null, projectPdf:null, description: "", status: '', projectStart: '',firstSale: '', area: 0, location: '', type: '', flatSize: 0, floors: 0});
+  const [formData, setFormData] = useState({ projectName: "", projectImage: null, projectNoc:null, reraNoc:null, approvedPlan:null,brochure:null, description: "",status: "", location: '',startDate:'',endDate:''});
 
   
   const [files, setFiles] = useState([]);
-  const [archImg, setArchImg] = useState([])
-  const [projectPdf, setprojectPdf] = useState([])
+  const [projectNoc, setprojectNoc] = useState([])
+  const [reraNoc, setReraNoc] = useState([])
+  const [approvedPlan, setApprovedPlan] = useState([])
+  const [brochure, setBrochure] = useState([])
   
 
-  // useEffect(()=>{
-  //   if(state!=null){
-      
-  //     setFormData(state?.projectInfo)
-  //     const projectImage = [{ 
-  //       source: `http://68.183.94.172/${formData?.projectImage}`,
-  //       location: {
-  //        type: "local"
-  //       }
-  //    }]
-  //     setFiles(projectImage)
-  //   }
-
-  // },[])
+ 
 
   useEffect(() => {
+    
     if (state !== null) {
       setFormData(state.projectInfo);
     }
   }, [state]);
+  console.log(formData)
+
+  // useEffect(()=> {
+  //   if(state!=null){
+  //     setFiles([`http://64.227.148.189${formData.projectImage}`])
+  //   }
+  // },[state])
 
   useEffect(() => {
    
     if (formData?.projectImage && files.length === 0) {
       const projectImageFile = {
-        source: `http://68.183.94.172/${formData.projectImage}`,
+        source: `http://64.227.148.189${formData.projectImage}`,
         location: {
           type: 'local'
         }
@@ -66,23 +63,42 @@ const NewProject = () => {
       setFiles([projectImageFile]);
     }
 
-    if (formData?.architectureMap &&archImg.length === 0) {
-      const ArchImageFile = { 
-        source:  `http://68.183.94.172/${formData?.architectureMap}`,
-        location: {
-         type: "local"
-        }
-     };
-      setArchImg([ArchImageFile]);
-    }
-    if (formData?.projectPdf &&projectPdf.length === 0) {
+  
+    if (formData?.projectNoc &&projectNoc.length === 0) {
       const projectPdfFile = { 
-        source:  `http://68.183.94.172/${formData?.projectPdf}`,
+        source:  `http://64.227.148.189/${formData?.projectNoc}`,
         location: {
          type: "local"
         }
      };
-     setprojectPdf([projectPdfFile]);
+     setprojectNoc([projectPdfFile]);
+    }
+    if (formData?.reraNoc &&reraNoc.length === 0) {
+      const reraNocFile = { 
+        source:  `http://64.227.148.189/${formData?.reraNoc}`,
+        location: {
+         type: "local"
+        }
+     };
+     setReraNoc([reraNocFile]);
+    }
+    if (formData?.brochure &&brochure.length === 0) {
+      const brochureFile = { 
+        source:  `http://64.227.148.189/${formData?.brochure}`,
+        location: {
+         type: "local"
+        }
+     };
+     setBrochure([brochureFile]);
+    }
+    if (formData?.approvedPlan &&approvedPlan.length === 0) {
+      const approvedPlanFile = { 
+        source:  `http://64.227.148.189/${formData?.approvedPlan}`,
+        location: {
+         type: "local"
+        }
+     };
+     setApprovedPlan([approvedPlanFile]);
     }
     
 
@@ -106,34 +122,78 @@ const NewProject = () => {
     }
 
 
-    if(state==null){
-    formData['projectImage'] = item.source
-    }
+    // if(state==null){
+    // formData['projectImage'] = item.source
+    // }
+    if(item.relativePath != undefined){
+    setFormData({
+      ...formData,
+      projectImage:item.source
+    })
+  }
+   
    
   }
 
-  function handleAddArchImg(err, item) {
-
+ 
+  function handleprojectNoc(err,item){
     if(err) {
       console.warn(err); return;
     }
   
-    if(state==null){
+   
+    if(item.relativePath != undefined){
       setFormData({
         ...formData,
-        architectureMap:item.source
+        projectNoc:item.source
       })
     }
+    
+
   }
-  function handleprojectPdf(err,item){
+
+
+  function handleReraNoc(err,item){
     if(err) {
       console.warn(err); return;
     }
   
-    if(state==null){
+   
+    if(item.relativePath != undefined){
       setFormData({
         ...formData,
-        projectPdf:item.source
+        reraNoc:item.source
+      })
+    }
+    
+
+  }
+
+
+  function handleApprovedPlan(err,item){
+    if(err) {
+      console.warn(err); return;
+    }
+  
+   
+    if(item.relativePath != undefined){
+      setFormData({
+        ...formData,
+        approvedPlan:item.source
+      })
+    }
+    
+
+  }
+  function handleBrochure(err,item){
+    if(err) {
+      console.warn(err); return;
+    }
+  
+    if(item.relativePath != undefined){
+      setFormData({
+        ...formData,
+        brochure:item.source
       })
     }
 
@@ -148,8 +208,9 @@ const NewProject = () => {
 
    
     if(state==null){
+      console.log(formData)
     
-    axios.post('http://68.183.94.172/api/project', {
+    axios.post('http://64.227.148.189/api/project', {
       ...formData,
       
     },
@@ -165,19 +226,24 @@ const NewProject = () => {
         icon: 'success',
         title: 'Submission Successfully',
         text: 'The project was successfully submitted',
-      })
+      }).then(function() {
+        window.location.href = "/layout/projectlist"
+    })
+    
     })
     .catch(function (error) {
+      console.log(error)
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: "Something went wrong!",
+        text: error.response.data.message,
       })
     });
   }
   else{
-    axios.put(`http://68.183.94.172/api/project/${state.projectInfo._id}`, {
-      ...formData
+    console.log(formData)
+    axios.put(`http://64.227.148.189/api/project/${state.projectInfo._id}`, {
+        ...formData
     },
     {
       headers: {
@@ -187,18 +253,23 @@ const NewProject = () => {
     }
     )
     .then(function (response) {
+      console.log(response)
       Swal.fire({
         icon: 'success',
         title: 'Submission Successfully',
         text: 'The project was successfully edited',
-      })
+      }).then(function() {
+        window.location.href = "/layout/projectlist"
+    })
+   
     })
     .catch(function (error) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: "Something went wrong!",
+        text: error.response.data.message,
       })
+     
     });
    
 
@@ -225,15 +296,15 @@ const NewProject = () => {
                 files={files}
                 onupdatefiles={setFiles}
                 allowMultiple={false}
-                maxFileSize={"1MB"}
+                maxFileSize={"5MB"}
                 id={styles.formData_img}
                 allowFileEncode={true}
                 onaddfile={handleAddProjectImg}
                
-                // source={`http://68.183.94.172/${formData?.projectInfo?.projectImage}`}
+                // source={`http://64.227.148.189/${formData?.projectInfo?.projectImage}`}
               //  src={baserrl+formaData?.projectInfo?.projectImage}
                 labelMaxFileSizeExceeded = "MAXIMUM SIZE EXCEEDED"
-                labelMaxFileSize = "Maximum file size can be 1MB"
+                labelMaxFileSize = "Maximum file size can be 5MB"
                 name="projectImage"
                 labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
                 
@@ -242,12 +313,12 @@ const NewProject = () => {
               files={files}
               onupdatefiles={setFiles}
               allowMultiple={false}
-              maxFileSize={"1MB"}
+              maxFileSize={"5MB"}
               id={styles.formData_img}
               allowFileEncode={true}
               onaddfile={handleAddProjectImg}
               labelMaxFileSizeExceeded = "MAXIMUM SIZE EXCEEDED"
-              labelMaxFileSize = "Maximum file size can be 1MB"
+              labelMaxFileSize = "Maximum file size can be 5MB"
               name="projectImage"
               labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
               
@@ -255,75 +326,157 @@ const NewProject = () => {
             />
 }
             </div>
-            <div id={styles.project_image} className={styles.project_form_div}>
-              <label htmlFor="project_image_field">Upload Architecture Image</label>
-              {formData?.architectureMap != null ? 
+           
+            {/* *************  projectPdf************************ */}
+            <div id={styles.project_projectPdf} className={styles.project_form_div}>
+              <label htmlFor="project_projectPdf_field">Upload NOC</label>
+              {formData?.projectNoc != null ? 
               <FilePond
-                files={archImg}
-                onupdatefiles={setArchImg}
+                files={projectNoc}
+                onupdatefiles={setprojectNoc}
                 allowMultiple={false}
-                maxFileSize={"1MB"}
-                id={styles.formData_archimg}
+                maxFileSize={"5MB"}
+                id={styles.formData_projectPdf}
                 labelMaxFileSizeExceeded = "MAXIMUM SIZE EXCEEDED"
-                labelMaxFileSize = "Maximum file size can be 1MB"
-                onaddfile={handleAddArchImg}
+                labelMaxFileSize = "Maximum file size can be 5MB"
+                onaddfile={handleprojectNoc}
            
                 
                 
                 // server="/api"
-                name="architectureMap" /* sets the file input name, it's filepond by default */
+                name="projectNoc" /* sets the file input name, it's filepond by default */
                 labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
                 
 
               /> : <FilePond
                 
-              files={archImg}
-              onupdatefiles={setArchImg}
+              files={projectNoc}
+              onupdatefiles={setprojectNoc}
               allowMultiple={false}
-              maxFileSize={"1MB"}
-              id={styles.formData_archimg}
+              maxFileSize={"5MB"}
+              id={styles.formData_projectNoc}
               labelMaxFileSizeExceeded = "MAXIMUM SIZE EXCEEDED"
-              labelMaxFileSize = "Maximum file size can be 1MB"
-              onaddfile={handleAddArchImg}
-              name="architectureMap" /* sets the file input name, it's filepond by default */
+              labelMaxFileSize = "Maximum file size can be 5MB"
+              onaddfile={handleprojectNoc}
+              name="projectNoc" /* sets the file input name, it's filepond by default */
               labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
               
 
             />  }
               
             </div>
-            {/* *************  projectPdf************************ */}
-            <div id={styles.project_projectPdf} className={styles.project_form_div}>
-              <label htmlFor="project_projectPdf_field">Upload projectPdf</label>
-              {formData?.projectPdf != null ? 
+
+              {/* *****************************RERA NOC STARTS **************************** */}     
+            <div id={styles.project_reranoc} className={styles.project_form_div}>
+              <label htmlFor="project_reranoc_field">Upload RERA NOC</label>
+              {formData?.reraNoc != null ? 
               <FilePond
-                files={projectPdf}
-                onupdatefiles={setprojectPdf}
+                files={reraNoc}
+                onupdatefiles={setReraNoc}
                 allowMultiple={false}
                 maxFileSize={"5MB"}
-                id={styles.formData_projectPdf}
+                id={styles.formData_reraNoc}
                 labelMaxFileSizeExceeded = "MAXIMUM SIZE EXCEEDED"
                 labelMaxFileSize = "Maximum file size can be 5MB"
-                onaddfile={handleprojectPdf}
+                onaddfile={handleReraNoc}
            
                 
                 
                 // server="/api"
-                name="projectPdf" /* sets the file input name, it's filepond by default */
+                name="reraNoc" /* sets the file input name, it's filepond by default */
                 labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
                 
 
               /> : <FilePond
                 
-              files={projectPdf}
-              onupdatefiles={setprojectPdf}
+              files={reraNoc}
+              onupdatefiles={setReraNoc}
               allowMultiple={false}
-              maxFileSize={"1MB"}
-              id={styles.formData_archimg}
+              maxFileSize={"5MB"}
+              id={styles.formData_reraNoc}
               labelMaxFileSizeExceeded = "MAXIMUM SIZE EXCEEDED"
-              labelMaxFileSize = "Maximum file size can be 1MB"
-              onaddfile={handleprojectPdf}
-              name="projectPdf" /* sets the file input name, it's filepond by default */
+              labelMaxFileSize = "Maximum file size can be 5MB"
+              onaddfile={handleReraNoc}
+              name="reraNoc" /* sets the file input name, it's filepond by default */
+              labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+              
+
+            />  }
+              
+            </div>
+            {/* *****************************RERA NOC ENDS **************************** */}
+
+
+            {/* Approved Plan */}
+            <div id={styles.project_approvedPlan} className={styles.project_form_div}>
+              <label htmlFor="project_approvedPlan_field">Upload Approved Plan</label>
+              {formData?.approvedPlan != null ? 
+              <FilePond
+                files={approvedPlan}
+                onupdatefiles={setApprovedPlan}
+                allowMultiple={false}
+                maxFileSize={"5MB"}
+                id={styles.formData_approvedPlan}
+                labelMaxFileSizeExceeded = "MAXIMUM SIZE EXCEEDED"
+                labelMaxFileSize = "Maximum file size can be 5MB"
+                onaddfile={handleApprovedPlan}
+           
+                
+                
+                // server="/api"
+                name="approvedPlan" /* sets the file input name, it's filepond by default */
+                labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+                
+
+              /> : <FilePond
+                
+              files={approvedPlan}
+              onupdatefiles={setApprovedPlan}
+              allowMultiple={false}
+              maxFileSize={"5MB"}
+              id={styles.formData_approvedPlan}
+              labelMaxFileSizeExceeded = "MAXIMUM SIZE EXCEEDED"
+              labelMaxFileSize = "Maximum file size can be 5MB"
+              onaddfile={handleApprovedPlan}
+              name="approvedPlan" /* sets the file input name, it's filepond by default */
+              labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+              
+
+            />  }
+              
+            </div>
+             {/* Brochure */}
+             <div id={styles.project_brochure} className={styles.project_form_div}>
+              <label htmlFor="project_brochure_field">Upload Brochure</label>
+              {formData?.brochure != null ? 
+              <FilePond
+                files={brochure}
+                onupdatefiles={setBrochure}
+                allowMultiple={false}
+                maxFileSize={"5MB"}
+                id={styles.formData_brochure}
+                labelMaxFileSizeExceeded = "MAXIMUM SIZE EXCEEDED"
+                labelMaxFileSize = "Maximum file size can be 5MB"
+                onaddfile={handleBrochure}
+           
+                
+                
+                // server="/api"
+                name="brochure" /* sets the file input name, it's filepond by default */
+                labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+                
+
+              /> : <FilePond
+                
+              files={brochure}
+              onupdatefiles={setBrochure}
+              allowMultiple={false}
+              maxFileSize={"5MB"}
+              id={styles.formData_brochure}
+              labelMaxFileSizeExceeded = "MAXIMUM SIZE EXCEEDED"
+              labelMaxFileSize = "Maximum file size can be 5MB"
+              onaddfile={handleBrochure}
+              name="brochure" /* sets the file input name, it's filepond by default */
               labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
               
 
@@ -344,67 +497,41 @@ const NewProject = () => {
                 name='status'
                 value={formData?.status}
                 onChange={handleChange}
+                defaultValue={""}
                 
               >
+                <option value="" disabled>Select</option>
                 <option value={"ongoing"}>Ongoing</option>
                 <option value={"completed"}>Completed</option>
                 <option value={"upcoming"}>Upcoming</option>
               </select>
             </div>
+          
             
-            <div className={styles.project_row} >
-              <div id={styles.project_start_date} className={styles.project_form_div}>
-                <label htmlFor="project_start_date_field">Project Start Date</label>
-                <input type="date" name='projectStart' id={styles.project_start_date_field} onChange={handleChange} value={formData?.projectStart.slice(0,10)} />
-
-              </div>
-              <div id={styles.project_first_sale} className={styles.project_form_div}>
-                <label htmlFor="project_first_sale_field">First Sale Date</label>
-                <input type="date" name='firstSale' id={styles.project_first_sale_field} onChange={handleChange} value={formData?.firstSale.slice(0,10)} />
-
-              </div>
-            </div>
-            <div className={styles.project_row} >
-              <div id={styles.project_area} className={styles.project_form_div}>
-                <label htmlFor="project_area_field">Area</label>
-                <TextField id={styles.project_area_field} name='area' label="Area" variant="outlined" onChange={handleChange} value={formData?.area} />
-
-              </div>
+           
+        
+            
               <div id={styles.project_location} className={styles.project_form_div}>
                 <label htmlFor="project_location_field">Location</label>
                 <TextField id={styles.project_location_field} name='location' label="Location" variant="outlined" onChange={handleChange} value={formData?.location} />
 
               </div>
-            </div>
 
-            <div id={styles.project_type} className={styles.project_form_div}>
-              <label htmlFor="project_type_field">Enter Project Type</label>
-             
-              <select
-                id="project_type_field"
-                value={formData?.type}
-                label="Age"
-                name='type'
-                onChange={handleChange}
-              >
-                <option value={"residential"}>Residential</option>
-                <option value={"commercial"}>Commercial</option>
-               
-              </select>
-            </div>
-
-            <div className={styles.project_row} >
-              <div id={styles.project_flatsize} className={styles.project_form_div}>
-                <label htmlFor="project_flatsize_field">Flat Size</label>
-                <TextField id={styles.project_flatsize_field} name='flatSize' label="Flat size" variant="outlined" onChange={handleChange} value={formData?.flatSize} />
-
+              <div className={` ${styles.project_form_outerdiv}`}>
+                <div id={styles.project_start} className={styles.project_form_div}>
+                  <label htmlFor="project_start_field">Start Date</label>
+                  <TextField id={styles.project_start_field} name='startDate' type='date' variant="outlined" onChange={handleChange} value={formData?.startDate} />
+                </div>
+                <div id={styles.project_end} className={styles.project_form_div}>
+                  <label htmlFor="project_end_field">End Date</label>
+                  <TextField id={styles.project_end_field} name='endDate' type='date'  variant="outlined" onChange={handleChange} value={formData?.endDate} />
+                </div>
               </div>
-              <div id={styles.project_floors} className={styles.project_form_div}>
-                <label htmlFor="project_floors_field">Floors</label>
-                <TextField id={styles.project_floors_field} name='floors' label="Floors" variant="outlined" onChange={handleChange} value={formData?.floors}/>
 
-              </div>
-            </div>
+            
+
+
+           
             <div id={styles.project_submit} className={styles.project_form_div}>
               <Button variant="contained" onClick={projectFormSubmitHandler}>Submit</Button>
             </div>

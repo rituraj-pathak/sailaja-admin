@@ -4,8 +4,9 @@
     min-width: 200px;
     box-shadow: 0 0 3px 2px #dadada;
     border-radius: 10px;
-    padding-block: 1rem;
-
+    padding-block: 10px;
+    background: white;
+    
 }
 .project_card_header{
     display: flex;
@@ -19,7 +20,7 @@
 }
 .project_card_body{
     padding-inline: 14px;
-    color: #646464;
+    color: black;
 }
 .project_card_body p{
     font-size: 1.5rem;

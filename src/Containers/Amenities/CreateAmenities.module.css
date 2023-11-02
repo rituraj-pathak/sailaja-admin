@@ -1,0 +1,16 @@
+.create_amenity_container{
+    margin-block: 2rem;
+    background-color: white;
+    padding:2rem;
+    border-radius: 10px;
+}
+.createamenity_form_div{
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+form{
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}

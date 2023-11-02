@@ -18,7 +18,7 @@ const Sidebar = ({openNavbar}) => {
     {
       id: 1,
       title: "Projects",
-      icon: <BsFillBuildingFill/>,
+      icon: <BsFillBuildingFill />,
       subMenu: [
         {
           id_: 1,
@@ -109,24 +109,25 @@ const Sidebar = ({openNavbar}) => {
         
       ]
     },
-    // {
-    //   id: 6,
-    //   title: "Banner",
-    //   icon: <MdOutlineRateReview/>,
-    //   subMenu: [
-    //     {
-    //       id_: 1,
-    //       subMenuTitle: "Add Banner",
-    //       subMenuLink: "addbanner"
-    //     },
-    //     {
-    //       id_: 2,
-    //       subMenuTitle: "Manage Banner",
-    //       subMenuLink: "managebanner"
-    //     },
+    {
+      id: 6,
+      title: "Amenities",
+      icon: <MdOutlineRateReview/>,
+      subMenu: [
+        {
+          id_: 1,
+          subMenuTitle: "Create Amenity",
+          subMenuLink: "createamenity"
+        },
+        {
+          id_: 2,
+          subMenuTitle: "Add Amenities",
+          subMenuLink: "addamenity"
+        },
+       
         
-    //   ]
-    // },
+      ]
+    },
   ]
   return (
     <>

@@ -25,7 +25,7 @@ const Cards = (props) => {
         </div>
         <div className={styles.project_card_body}>
             <h4>{props.title}</h4>
-            <p>{props.value}</p>
+            <p>{props.dashInfo}</p>
         </div>
     </div>
   )

@@ -44,7 +44,7 @@ const ContactList = () => {
     // ]
 
     useEffect(() => {
-        axios.get('http://68.183.94.172/api/contact')
+        axios.get('http://64.227.148.189/api/contact')
           .then(response => {
            console.log(response.data.data)
            setContactData(response.data.data)

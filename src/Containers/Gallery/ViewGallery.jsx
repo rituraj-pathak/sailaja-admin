@@ -9,7 +9,7 @@ import 'filepond-plugin-image-preview/dist/filepond-plugin-image-preview.css'
 
 import FilePondPluginFileValidateSize from 'filepond-plugin-file-validate-size';
 import axios from 'axios'
-
+import Swal from 'sweetalert2'
 // Register the plugins
 registerPlugin(FilePondPluginImageExifOrientation, FilePondPluginImagePreview,FilePondPluginFileValidateSize)
 
@@ -21,7 +21,7 @@ const ViewGallery = () => {
     const [getResponse, setGetResponse] = useState([])
 
     useEffect(()=> {
-        axios.get('http://68.183.94.172/api/project/list')
+        axios.get('http://64.227.148.189/api/project/list')
         .then(function (response) {
           // handle success
           setAllProjects(response.data.data);
@@ -36,10 +36,9 @@ const ViewGallery = () => {
       const handleFileRemove = (errRes, file) => {
         // Add the removed file to the deletedFiles array
         setDeletedFiles([...deletedFiles, file]);
-        let deleteFile=file.source.slice(21);
-        console.log(deleteFile)
-        console.log(getResponse)
-
+        let deleteFile=file.source.slice(22);
+     
+       
         const deletedItem = getResponse.filter(item => {
             if(item.filePath == deleteFile)
                 return item;
@@ -49,7 +48,7 @@ const ViewGallery = () => {
      
         console.log(deletedItem[0]._id)
 
-        axios.delete(`http://68.183.94.172/api/gallery/${deletedItem[0]._id}`, {
+        axios.delete(`http://64.227.148.189/api/gallery/${deletedItem[0]._id}`, {
             headers: {
                 'Authorization' : `Bearer ${localStorage.getItem('token')}`
             },
@@ -67,13 +66,13 @@ const ViewGallery = () => {
 
       const fetchGalleryImageHandler = () => {
 
-        axios.get(`http://68.183.94.172/api/gallery/project/${project._id}`)
+        axios.get(`http://64.227.148.189/api/gallery/project/${project._id}`)
         .then(function (response) {
           // handle success
         
           const projectGalleryFiles = response.data.data.map(file=> ({
             id_: file._id,
-            source: `http://68.183.94.172/${file.filePath}`,
+            source: `http://64.227.148.189/${file.filePath}`,
             location: {
               type: 'local'
             }
@@ -84,7 +83,11 @@ const ViewGallery = () => {
         })
         .catch(function (error) {
           // handle error
-          console.log(error);
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: 'Please select a project',
+          })
         });
       }
 
@@ -97,7 +100,10 @@ const ViewGallery = () => {
         <div className={styles.gallery_images_container}>
             <div className={styles.gallery_images_project_select}>
                 <label htmlFor="">Select your project</label>
-               <select onChange={(event) => setProject(allProjects.find(project => project.projectName === event.target.value))}>
+               <select onChange={(event) => setProject(allProjects.find(project => project.projectName === event.target.value))} defaultValue="">
+               <option value="" disabled>
+                                Select a project
+                        </option>
                   {allProjects.map((project,i) => {
                     return ( 
                       <option key={i} value={project.projectName}  >
@@ -122,11 +128,13 @@ const ViewGallery = () => {
                     maxFileSize={"1MB"}
                     labelMaxFileSizeExceeded = "MAXIMUM SIZE EXCEEDED"
                     labelMaxFileSize = "Maximum file size can be 1MB"
+                    allowBrowse={false}
+                    allowRemove={true}
                     
                     
                     // server="/api"
                     name="files" /* sets the file input name, it's filepond by default */
-                    labelIdle='Drag & Drop your files or <span class="filepond--label-action">Browse</span>'
+                    labelIdle='Select a project to view gallery images'
         />
                 </form>
             </div>

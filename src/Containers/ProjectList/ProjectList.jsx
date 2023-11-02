@@ -8,16 +8,19 @@ const ProjectList = () => {
   const [allProjects, setAllProjects] = useState([]);
  
   useEffect(()=> {
-    axios.get('http://68.183.94.172/api/project/all/admin', {
+    axios.get('http://64.227.148.189/api/project/all/admin', {
     })
     .then(function (response) {
       setAllProjects(response.data.data)
+      console.log(response.data.data.length)
  
     })
     .catch(function (error) {
       console.log(error);
     })
   },[])
+
+
 
 
   return (

@@ -46,7 +46,12 @@
     height: 80px;
     width: 80px;
     border-radius: 50%;
-    background-color: red;
+    /* background-color: red; */
+}
+.testimonial_img img{
+    height: 80px;
+    width: 80px;
+
 }
 .testimonial_body p{
     text-align: justify;

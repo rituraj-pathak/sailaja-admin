@@ -17,7 +17,7 @@ const ProjectCard = ({projectInfo}) => {
         setIsChecked(prev=>!prev)
       
         if(isChecked){
-            axios.delete(`http://68.183.94.172/api/project/delete/${projectInfo._id}`, {
+            axios.delete(`http://64.227.148.189/api/project/delete/${projectInfo._id}`, {
             headers: {
                 'Authorization' : `Bearer ${localStorage.getItem('token')}`
             },
@@ -30,7 +30,7 @@ const ProjectCard = ({projectInfo}) => {
 
         }
         else{
-            axios.delete(`http://68.183.94.172/api/project/delete/${projectInfo._id}`, {
+            axios.delete(`http://64.227.148.189/api/project/delete/${projectInfo._id}`, {
             headers: {
                 'Authorization' : `Bearer ${localStorage.getItem('token')}`
             },
@@ -49,7 +49,7 @@ const ProjectCard = ({projectInfo}) => {
   return (
     <div className={styles.projectcard}>
         <div className={styles.projectcard_img}>
-            <img src={`http://68.183.94.172/${projectInfo.projectImage}`} alt="projectcard_image" />
+            <img src={`http://64.227.148.189${projectInfo.projectImage}`} alt="projectcard_image" />
         </div>
         <div className={styles.projectcard_body}>
             <div className={styles.projectcard_body_headinfo}>

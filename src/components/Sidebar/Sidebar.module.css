@@ -1,8 +1,7 @@
 .sidebar{
     width: 270px;
     height: 100vh;
-    background-color: #2F323A;
-    box-shadow: 0 0 3px 2px #e4e4e4;
+    background-color: #1d1e20;
     position:sticky;
     top: 0;
     left: 0;
@@ -25,7 +24,7 @@
     display: flex;
     align-items: center;
     padding: 10px 20px;
-    border-bottom: 1px solid rgb(88, 88, 88);
+    border-bottom: 1px solid rgb(41, 41, 41);
 }
 
 ::-webkit-scrollbar {

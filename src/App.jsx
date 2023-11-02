@@ -11,9 +11,12 @@ import AddGallery from './Containers/Gallery/AddGallery'
 import ViewGallery from './Containers/Gallery/ViewGallery'
 import AddTestimonial from './Containers/Testimonial/AddTestimonial'
 import ManageTestimonial from './Containers/Testimonial/ManageTestimonial'
-import AddBanner from './Containers/Banner/AddBanner'
-import ManageBanner from './Containers/Banner/ManageBanner'
+
 import EnquiryList from "./Containers/EnquiryList/EnquiryList"
+import CreateAmenities from './Containers/Amenities/CreateAmenities'
+import AddAmenities from './Containers/Amenities/AddAmenities'
+import ManageAmenities from './Containers/Amenities/ManageAmenities'
+import Protected from './components/Protected'
 
 function App() {
   const [openNavbar,setOpenNavbar] = useState(true);
@@ -38,7 +41,7 @@ function App() {
     <BrowserRouter>
     <Routes>
     <Route path="/" element={<Login />} />
-      <Route path="/layout" element={<Layout />}>
+      <Route path="/layout" element={<Protected Component={Layout} />}>
         
           <Route index path='/layout' element={<Dashboard />} />
           <Route path="projectlist" element={<ProjectList />}/> 
@@ -49,8 +52,9 @@ function App() {
           <Route path="viewgallery" element={<ViewGallery />}/> 
           <Route path="addtestimonial" element={<AddTestimonial />}/>
           <Route path="managetestimonial" element={<ManageTestimonial/>}/>
-          <Route path="addbanner" element={<AddBanner/>}/>   
-          <Route path="managebanner" element={<ManageBanner/>}/> 
+          <Route path="createamenity" element={<CreateAmenities/>}/>   
+          <Route path="addamenity" element={<AddAmenities/>}/> 
+          <Route path="manageamenity" element={<ManageAmenities/>}/> 
           
       </Route>
     </Routes>

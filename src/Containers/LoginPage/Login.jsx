@@ -1,37 +1,102 @@
-import React, { useState } from 'react'
+import React, { useState,useEffect } from 'react'
 import "./Login.css"
 import { useNavigate } from 'react-router-dom'
 import logo from "../../assets/logo.png"
+import Swal from 'sweetalert2'
+
 const Login = () => {
   const [email,setEmail] = useState('');
   const [password, setPassword] = useState('');
   const navigate = useNavigate();
 
-  const handleSubmit = () => {
-  
-    fetch('http://68.183.94.172/api/admin/login', {
-      method: 'POST',
-      body: JSON.stringify({
-        email: email,
-        password: password
-      }),
-      headers: {
-        'Content-type': 'application/json; charset=UTF-8',
-      },
-    })
-       .then((response) => response.json())
-       .then((data) => {
-        if(data.status==200){
-          navigate('/layout')
-          localStorage.setItem('token', data.token);
-        }
+  useEffect(()=> {
+    let login = localStorage.getItem('token')
+    if(login){
+        navigate('/layout')
+    }
+},[])
 
-       })
-       .catch((err) => {
-          console.log(err.message);
-       });
+  const handleSubmit = (e) => {
+    e.preventDefault()
+
+    const LoginSubmitBtn = document.getElementById('loginBtn');
+
+    let flag = true;
+    const email =  document.forms['loginForm']['email'].value;
+    const password =  document.forms['loginForm']['password'].value;
+    const regName = /^[a-zA-Z ]*$/;
+    const regEmail = /[a-z0-9]+@[a-z]+\.[a-z]{2,3}/
+
+    if(email.length==0){
+        setError('email','*Email cannot be empty')
+        flag=false
+  
+      }
+      if(password.length==0){
+        setError('password','*Password cannot be empty')
+        flag=false
+  
+      }
+      if(!regEmail.test(email) &&email.length!=0){
+        setError('email','*Invalid Email')
+        flag=false;
+      }
+      
+      if(flag==true){
+        LoginSubmitBtn.disabled = true;
+        LoginSubmitBtn.innerHTML='Logging in...'
+      
+        fetch('http://64.227.148.189/api/admin/login', {
+          method: 'POST',
+          body: JSON.stringify({
+            email: email,
+            password: password
+          }),
+          headers: {
+            'Content-type': 'application/json; charset=UTF-8',
+          },
+        })
+          .then((response) => response.json())
+          .then((data) => {
+            if(data.status==200){
+              navigate('/layout')
+              localStorage.setItem('token', data.token);
+              LoginSubmitBtn.disabled = false;
+              document.forms['loginForm']['email'].value = '';
+              document.forms['loginForm']['password'].value = '';
+              LoginSubmitBtn.innerHTML=`Submit`
+            }
+            else{
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "Your email or password is wrong",
+              })
+              LoginSubmitBtn.disabled = false;
+              LoginSubmitBtn.innerHTML=`Submit`
+            }
+
+          })
+          .catch((err) => {
+              // console.log(err.message);
+              Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: "Something went wrong!",
+              })
+            
+              LoginSubmitBtn.disabled = false;
+              document.forms['loginForm']['email'].value = '';
+              document.forms['loginForm']['password'].value = '';
+              LoginSubmitBtn.innerHTML=`Submit`
+          });
+      }
     
-    
+  }
+
+  const setError = (id,error) => {
+    const element = document.getElementById(id);
+    element.getElementsByClassName('loginFormErrorClass')[0].innerHTML = error;
   }
   return (
     <div className="login_container">
@@ -42,14 +107,16 @@ const Login = () => {
             <p>Please enter your details to sign in</p>
           </div>
 
-          <form action="">
-            <div className='email'>
-              <input type="email" name='email' required placeholder='Email' onChange={(e)=> setEmail(e.target.value) } />
+          <form action="" name='loginForm'>
+            <div className='email' id='email'>
+              <input type="email" name='email' required placeholder='Email' onChange={(e)=> {setEmail(e.target.value);  setError(e.target.parentNode.id,'')} } />
+              <p className='loginFormErrorClass'></p>
             </div>
-            <div className='email'>
-              <input type="password" name='password' required placeholder='Password'  onChange={(e)=> setPassword(e.target.value)} />
+            <div className='password' id='password'>
+              <input type="password" name='password' required placeholder='Password'  onChange={(e)=>{ setPassword(e.target.value); setError(e.target.parentNode.id,'')}} />
+              <p className='loginFormErrorClass'></p>
             </div>
-            <button type='button' onClick={handleSubmit}>Submit</button>
+            <button type='submit' id='loginBtn' onClick={handleSubmit}>Submit</button>
           </form>
       </div>
     </div>

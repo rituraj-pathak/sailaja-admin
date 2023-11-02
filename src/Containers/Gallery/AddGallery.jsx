@@ -24,7 +24,7 @@ const AddGallery = () => {
     const [project,setProject]= useState({})
 
     useEffect(()=> {
-      axios.get('http://68.183.94.172/api/project/list')
+      axios.get('http://64.227.148.189/api/project/list')
       .then(function (response) {
         // handle success
         setAllProjects(response.data.data);
@@ -40,14 +40,12 @@ const AddGallery = () => {
     const galleryHandler = (e) => {
       e.preventDefault()
       const updatedData = files.reduce((result, file, index) => {
-        console.log(file.source);
         result[index] = file.source;
         return result;
       }, {});
    
      
-      console.log(project)
-      axios.post(`http://68.183.94.172/api/gallery/${project._id}`, {
+      axios.post(`http://64.227.148.189/api/gallery/${project._id}`, {
       ...updatedData
     },
     {
@@ -63,13 +61,14 @@ const AddGallery = () => {
         title: 'Submission Successfully',
         text: 'The gallery was successfully submitted',
       })
+      console.log(response)
   
     })
     .catch(function (error) {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: "Something went wrong!",
+        text: error.response.data.message,
       })
     });
 
@@ -87,7 +86,10 @@ const AddGallery = () => {
         <form onSubmit={galleryHandler}>
             <div id={styles.selectProject}>
                 <label htmlFor="galleryProjectSelect">Select Project: </label>
-                <select onChange={(event) => setProject(allProjects.find(project => project.projectName === event.target.value))}>
+                <select onChange={(event) => setProject(allProjects.find(project => project.projectName === event.target.value))}  defaultValue="">
+                      <option value="" disabled>
+                                Select a project
+                        </option>
                   {allProjects.map((project,i) => {
                     return ( 
                       <option key={i} value={project.projectName}  >
@@ -100,12 +102,12 @@ const AddGallery = () => {
 
 
             <div id={styles.project_gallery_image}>
-              <label htmlFor="project_gallery_image_field">Upload Project Image</label>
+              <label htmlFor="project_gallery_image_field">Upload Project Gallery</label>
               <FilePond
                 files={files}
                 onupdatefiles={setFiles}
                 allowMultiple={true}
-                maxFiles={5}
+                maxFiles={10}
                 maxFileSize={"1MB"}
                 labelMaxFileSizeExceeded = "MAXIMUM SIZE EXCEEDED"
                 labelMaxFileSize = "Maximum file size can be 1MB"
